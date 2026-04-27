@@ -161,6 +161,15 @@ public class JdbcRecommendationService implements RecommendationService {
                 main.reason(),
                 "preference_weighted"
         );
+        jdbcTemplate.update("""
+                insert into meal_histories (id, user_id, meal_id, meal_time, source)
+                values (?, ?, ?, ?, 'recommendation')
+                """,
+                "hist_" + UUID.randomUUID(),
+                DEMO_USER_ID,
+                main.id(),
+                request.mealTime() != null && !request.mealTime().isBlank() ? request.mealTime() : "lunch"
+        );
     }
 
     private String toJsonArray(String value) {
